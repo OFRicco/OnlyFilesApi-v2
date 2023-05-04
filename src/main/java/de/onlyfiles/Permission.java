@@ -1,7 +1,7 @@
 package de.onlyfiles;
 
 
-public enum Permissions {
+public enum Permission {
 
     ADMIN,
     MOD,

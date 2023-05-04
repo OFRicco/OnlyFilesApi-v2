@@ -3,7 +3,7 @@ package de.onlyfiles.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.onlyfiles.Permissions;
+import de.onlyfiles.Permission;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,15 +39,15 @@ public class User {
     
     @Column(name = "permission", nullable = false, unique = false, updatable = true)
     @Enumerated(EnumType.ORDINAL)
-    private Permissions permissions;
+    private Permission permission;
 
     public User() {
     }
     
-    public User(String displayName, String password, Permissions permissions) {
+    public User(String displayName, String password, Permission permission) {
         this.displayName = displayName;
         this.password = password;
-        this.permissions = permissions;
+        this.permission = permission;
     }
     
     public long getId() {
@@ -86,12 +86,12 @@ public class User {
         this.ownedFiles = ownedFiles;
     }
 
-    public Permissions getPermissions() {
-        return permissions;
+    public Permission getPermissions() {
+        return permission;
     }
     
-    public void setPermissions(Permissions permissions) {
-        this.permissions = permissions;
+    public void setPermissions(Permission permissions) {
+        this.permission = permissions;
     }
     
     public void addOwnedFile(File newFile) {
