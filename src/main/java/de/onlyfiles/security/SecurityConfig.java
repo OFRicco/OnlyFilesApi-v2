@@ -23,7 +23,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeHttpRequests()
-            .requestMatchers("/**").authenticated()
+            .anyRequest().authenticated()
             .and()
             .formLogin().permitAll().defaultSuccessUrl("/", false)
             .and()
@@ -33,7 +33,7 @@ public class SecurityConfig {
         
         return http.build();
     }
-
+    
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
