@@ -38,7 +38,7 @@ public class User {
     private List<File> ownedFiles = new ArrayList<>();
     
     @Column(name = "permission", nullable = false, unique = false, updatable = true)
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Permission permission;
 
     public User() {
