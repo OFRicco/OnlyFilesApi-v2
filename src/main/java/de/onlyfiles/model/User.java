@@ -86,11 +86,11 @@ public class User {
         this.ownedFiles = ownedFiles;
     }
 
-    public Permission getPermissions() {
+    public Permission getPermission() {
         return permission;
     }
     
-    public void setPermissions(Permission permissions) {
+    public void setPermission(Permission permissions) {
         this.permission = permissions;
     }
     
