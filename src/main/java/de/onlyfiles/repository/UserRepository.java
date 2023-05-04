@@ -7,5 +7,5 @@ import de.onlyfiles.model.User;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
-    public User findUserByUsername(String username);
+    public User findUserByDisplayName(String displayName);
 }
