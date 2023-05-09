@@ -15,7 +15,7 @@ public class File {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", columnDefinition = "BIGINT", nullable = false, unique = true, updatable = false)
+    @Column(name = "id", columnDefinition = "UNSIGNED BIGINT", nullable = false, unique = true, updatable = false)
     private long id;
 
     @Column(name = "name", columnDefinition = "VARCHAR(256)", nullable = false, unique = true, updatable = false)
@@ -27,11 +27,8 @@ public class File {
     @Column(name = "link", columnDefinition = "VARCHAR(128)", nullable = false, unique = true, updatable = false)
     private String link;
 
-    @Column(name = "type", columnDefinition = "VARCHAR(3)", nullable = false, unique = true, updatable = false)
-    private String type;
-
-    @Column(name = "uploadDate", columnDefinition = "BIGINT", nullable = false, unique = true, updatable = false)
-    private Long uploadDate;
+    @Column(name = "size", columnDefinition = "UNSIGNED BIGINT", nullable = false, unique = true, updatable = false)
+    private Long size;
     
     public File() {
     }
@@ -68,21 +65,6 @@ public class File {
         this.link = link;
     }
     
-    public String getType() {
-        return type;
-    }
-    
-    public void setType(String type) {
-        this.type = type;
-    }
-    
-    public Long getUploadDate() {
-        return uploadDate;
-    }
-    
-    public void setUploadDate(Long uploadDate) {
-        this.uploadDate = uploadDate;
-    }
 
     
 }
