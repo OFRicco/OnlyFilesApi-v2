@@ -20,11 +20,11 @@ public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", columnDefinition = "UNSIGNED BIGINT", nullable = false, unique = true, updatable = false)
+    @Column(name = "id", columnDefinition = "BIGINT UNSIGNED", nullable = false, unique = true, updatable = false)
     private long id;
 
-    @Column(name = "display_name", columnDefinition = "VARCHAR(32)", nullable = false, unique = true, updatable = true)
-    private String displayName;
+    @Column(name = "name", columnDefinition = "VARCHAR(32)", nullable = false, unique = true, updatable = true)
+    private String name;
     
     @ManyToOne(fetch = FetchType.LAZY)
     private User owner;
@@ -56,12 +56,12 @@ public class Group {
         return id;
     }
     
-    public String getDisplayName() {
-        return displayName;
+    public String getName() {
+        return this.name;
     }
     
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public User getOwner() {
