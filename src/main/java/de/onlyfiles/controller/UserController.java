@@ -82,16 +82,26 @@ public class UserController {
         
         throw new NoCurrentPrincipalException();
     }
-    
+
     @DeleteMapping
-    public ResponseEntity<User> deleteUser(Principal principal) {
+    public ResponseEntity<Boolean> deleteUser(Principal principal) {
         if(principal != null) {
 
-            userRepository.deleteByName(principal.getName());
-            User user = userRepository.findUserByName(principal.getName());
-            user.setPassword(null);
+            boolean success = userRepository.deleteByName(principal.getName());
             
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            return new ResponseEntity<>(success, HttpStatus.OK);
+        }
+        
+        throw new NoCurrentPrincipalException();
+    }
+    
+    @DeleteMapping(path = "/{name}")
+    public ResponseEntity<Boolean> deleteSpecificUser(@PathVariable(value="name") String name) {
+        if(name != null) {
+
+            boolean success = userRepository.deleteByName(name);
+            
+            return new ResponseEntity<>(success, HttpStatus.OK);
         }
         
         throw new NoCurrentPrincipalException();
