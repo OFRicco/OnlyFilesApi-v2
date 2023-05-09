@@ -25,8 +25,8 @@ public class User {
     @Column(name = "id", columnDefinition = "BIGINT", nullable = false, unique = true, updatable = false)
     private long id;
 
-    @Column(name = "display_name", columnDefinition = "VARCHAR(32)", nullable = false, unique = true, updatable = true)
-    private String displayName;
+    @Column(name = "name", columnDefinition = "VARCHAR(32)", nullable = false, unique = true, updatable = true)
+    private String name;
 
     @Column(name = "password", columnDefinition = "VARCHAR(60)", nullable = false, unique = false, updatable = true)
     private String password;
@@ -44,8 +44,8 @@ public class User {
     public User() {
     }
     
-    public User(String displayName, String password, Permission permission) {
-        this.displayName = displayName;
+    public User(String name, String password, Permission permission) {
+        this.name = name;
         this.password = password;
         this.permission = permission;
     }
@@ -54,12 +54,12 @@ public class User {
         return this.id;
     }
     
-    public String getDisplayName() {
-        return displayName;
+    public String getName() {
+        return name;
     }
     
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setName(String displayName) {
+        this.name = displayName;
     }
     
     public String getPassword() {

@@ -17,12 +17,12 @@ public class MySQLUserDetailsService implements UserDetailsService {
     
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        de.onlyfiles.model.User user = userRepository.findUserByDisplayName(username);
+        de.onlyfiles.model.User user = userRepository.findUserByName(username);
         if(user == null) {
             throw new UsernameNotFoundException("User not present");
         }
         return User.builder()
-                .username(user.getDisplayName())
+                .username(user.getName())
                 .password(user.getPassword())
                 .roles(user.getPermission().toString())
             .build();
