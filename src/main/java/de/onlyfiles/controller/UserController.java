@@ -85,13 +85,13 @@ public class UserController {
     }
 
     @DeleteMapping(path = "/{name}")
-    public ResponseEntity<Boolean> deleteUser(@PathVariable(value="name", required = true) String name) {
+    public ResponseEntity<Boolean> deleteUser(@PathVariable(value="name", required = false) String name) {
         boolean success = userRepository.deleteByName(name);
         
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/groups" ,produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/groups" , produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<Group>> getGroups(Principal principal) {
         if(principal == null) {
             throw new NoCurrentPrincipalException();
@@ -108,7 +108,7 @@ public class UserController {
         return new ResponseEntity<>(groups, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{name}/groups" ,produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{name}/groups" , produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<Group>> getGroups(@PathVariable(value="name", required = true) String name) {
         User user = userRepository.findByName(name);
             
@@ -121,7 +121,7 @@ public class UserController {
         return new ResponseEntity<>(groups, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/owned/groups" ,produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/owned/groups" , produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<Group>> getOwnedGroups(Principal principal) {
         if(principal == null) {
             throw new NoCurrentPrincipalException();
@@ -138,7 +138,7 @@ public class UserController {
         return new ResponseEntity<>(groups, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{name}/owned/groups" ,produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{name}/owned/groups" , produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<Group>> getOwnedGroups(@PathVariable(value="name", required = true) String name) {
         User user = userRepository.findByName(name);
             
@@ -151,7 +151,7 @@ public class UserController {
         return new ResponseEntity<>(groups, HttpStatus.OK);
     }
     
-    @GetMapping(path = "/owned/files" ,produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/owned/files" , produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<File>> getOwnedFiles(Principal principal) {
         if(principal == null) {
             throw new NoCurrentPrincipalException();
@@ -168,7 +168,7 @@ public class UserController {
         return new ResponseEntity<>(files, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{name}/owned/files" ,produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{name}/owned/files" , produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<File>> getOwnedFiles(@PathVariable(value="name", required = true) String name) {
         User user = userRepository.findByName(name);
             
@@ -181,7 +181,7 @@ public class UserController {
         return new ResponseEntity<>(files, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping(path = "/edit")
     public ResponseEntity<Long> editUser(@RequestBody User user) {
         if(!userRepository.existsByName(user.getName())) {
             throw new UserNotFoundException();
