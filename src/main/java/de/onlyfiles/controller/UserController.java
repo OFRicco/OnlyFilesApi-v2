@@ -37,18 +37,18 @@ public class UserController {
     PasswordEncoder passwordEncoder;
 
     @PostMapping
-    public ResponseEntity<Long> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@RequestBody User user) {
         if(userRepository.existsByName(user.getName())) {
             throw new ObjectAlreadyExistsException();
         }
         
         User createdUser = userRepository.save(user);
         
-        return new ResponseEntity<>(createdUser.getId(), HttpStatus.OK);
+        return new ResponseEntity<>(createdUser, HttpStatus.OK);
     }
     
     @GetMapping(path = {"", "/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> getUser(Principal principal, @PathVariable(value="name", required = false) Optional<Long> id) {
+    public ResponseEntity<User> getUser(Principal principal, @PathVariable(value="id", required = false) Optional<Long> id) {
         if(principal == null) {
             throw new NoCurrentPrincipalException();
         }

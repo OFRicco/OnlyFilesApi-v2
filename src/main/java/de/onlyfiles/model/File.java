@@ -1,14 +1,23 @@
 package de.onlyfiles.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+@JsonIgnoreProperties(value = {"groups"})
 @Entity
 @Table(name = "files")
 public class File {
@@ -29,6 +38,14 @@ public class File {
 
     @Column(name = "size", columnDefinition = "BIGINT UNSIGNED", nullable = false, unique = false, updatable = false)
     private Long size;
+    
+
+    @ManyToMany
+    @JoinTable(
+            name = "group_files",
+            joinColumns = @JoinColumn(name="group_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name="file_id", referencedColumnName = "id"))
+    private Set<Group> groups = new HashSet<>();
     
     public File() {
     }
@@ -76,5 +93,12 @@ public class File {
         this.size = size;
     }
     
+    public Set<Group> getGroups() {
+        return groups;
+    }
+    
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
+    }
     
 }

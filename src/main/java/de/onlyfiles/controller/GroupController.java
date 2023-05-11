@@ -38,14 +38,14 @@ public class GroupController {
     public UserRepository userRepository;
 
     @PostMapping
-    public ResponseEntity<Long> createGroup(@RequestBody Group group) {
+    public ResponseEntity<Group> createGroup(@RequestBody Group group) {
         if(groupRepository.existsByName(group.getName())) {
             throw new ObjectAlreadyExistsException();
         }
         
         Group createdGrouped = groupRepository.save(group);
         
-        return new ResponseEntity<>(createdGrouped.getId(), HttpStatus.OK);
+        return new ResponseEntity<>(createdGrouped, HttpStatus.OK);
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
