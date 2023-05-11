@@ -180,5 +180,16 @@ public class UserController {
         
         return new ResponseEntity<>(files, HttpStatus.OK);
     }
+
+    @PostMapping
+    public ResponseEntity<Long> editUser(@RequestBody User user) {
+        if(!userRepository.existsByName(user.getName())) {
+            throw new UserNotFoundException();
+        }
+        
+        User createdUser = userRepository.save(user);
+        
+        return new ResponseEntity<>(createdUser.getId(), HttpStatus.OK);
+    }
     
 }
