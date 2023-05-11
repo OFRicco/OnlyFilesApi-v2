@@ -1,8 +1,6 @@
 package de.onlyfiles.controller;
 
 import java.security.Principal;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
