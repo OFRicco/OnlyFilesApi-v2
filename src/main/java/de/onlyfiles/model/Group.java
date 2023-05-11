@@ -17,7 +17,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-@JsonIgnoreProperties(value = {"members","files"})
+@JsonIgnoreProperties(value = {"members"})
 @Entity
 @Table(name = "groups")
 public class Group {
