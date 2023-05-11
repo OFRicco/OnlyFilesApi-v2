@@ -45,7 +45,7 @@ public class UserController {
         return new ResponseEntity<>(createdUser.getId(), HttpStatus.OK);
     }
     
-    @GetMapping(produces = {MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getUser(Principal principal, @RequestParam(name = "extended") boolean extended) {
         if(principal == null) {
             throw new NoCurrentPrincipalException();
@@ -62,7 +62,7 @@ public class UserController {
     }
     
 
-    @GetMapping(path = "/groups" ,produces = {MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(path = "/groups" ,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<Group>> getGroupsWithFiles(Principal principal) {
         if(principal == null) {
             throw new NoCurrentPrincipalException();
@@ -79,7 +79,7 @@ public class UserController {
         return new ResponseEntity<>(groups, HttpStatus.OK);
     }
     
-    @GetMapping(path = "/{name}", produces = {MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(path = "/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getSpecificUser(@PathVariable(value="name", required = true) String name) {
         User user = userRepository.findByName(name);
         
