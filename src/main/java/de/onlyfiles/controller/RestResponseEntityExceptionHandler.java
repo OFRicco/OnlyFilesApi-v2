@@ -9,7 +9,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import de.onlyfiles.exception.NoCurrentPrincipalException;
-import de.onlyfiles.exception.UserAlreadyExistsException;
+import de.onlyfiles.exception.ObjectAlreadyExistsException;
 
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
@@ -21,7 +21,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return this.handleExceptionInternal(ex, callbackMessage, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
     
-    @ExceptionHandler(UserAlreadyExistsException.class)
+    @ExceptionHandler(ObjectAlreadyExistsException.class)
     protected ResponseEntity<Object> userAlreadyExistsException(RuntimeException ex, WebRequest request) {
         String callbackMessage = "User already exists";
         
