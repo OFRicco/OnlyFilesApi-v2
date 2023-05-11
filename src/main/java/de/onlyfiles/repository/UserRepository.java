@@ -7,7 +7,7 @@ import de.onlyfiles.model.User;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
-    public User findUserByName(String name);
+    public User findByName(String name);
     public boolean existsByName(String name);
     public boolean deleteByName(String name);
 }

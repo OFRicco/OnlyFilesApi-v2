@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.onlyfiles.exception.NoCurrentPrincipalException;
-import de.onlyfiles.exception.UserAlreadyExistsException;
+import de.onlyfiles.exception.ObjectAlreadyExistsException;
 import de.onlyfiles.model.User;
 import de.onlyfiles.repository.UserRepository;
 
@@ -30,12 +30,23 @@ public class UserController {
 
     @Autowired 
     PasswordEncoder passwordEncoder;
+
+    @PostMapping
+    public ResponseEntity<Long> createUser(@RequestBody User user) {
+        
+        if(!userRepository.existsByName(user.getName())) {
+            User createdUser = userRepository.save(user);
+            
+            return new ResponseEntity<>(createdUser.getId(), HttpStatus.OK);
+        }
+        throw new ObjectAlreadyExistsException();
+    }
     
     @GetMapping(produces = {MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<User> getUser(Principal principal) {
         if(principal != null) {
             
-            User user = userRepository.findUserByName(principal.getName());
+            User user = userRepository.findByName(principal.getName());
             user.setPassword(null);
             
             return new ResponseEntity<>(user, HttpStatus.OK);
@@ -48,7 +59,7 @@ public class UserController {
     public ResponseEntity<User> getSpecificUser(@PathVariable(value="name") String name) {
         if(name != null) {
             
-            User user = userRepository.findUserByName(name);
+            User user = userRepository.findByName(name);
             user.setPassword(null);
             
             return new ResponseEntity<>(user, HttpStatus.OK);
@@ -56,27 +67,13 @@ public class UserController {
         
         throw new NoCurrentPrincipalException();
     }
-    
-    @PostMapping
-    public ResponseEntity<Long> createUser(@RequestBody User user, @RequestParam(value = "encrypted") boolean encrypted) {
-        
-        if(!userRepository.existsByName(user.getName())) {
-            if(!encrypted) {
-                user.setPassword(passwordEncoder.encode(user.getPassword()));
-            }
-            
-            User createdUser = userRepository.save(user);
-            return new ResponseEntity<>(createdUser.getId(), HttpStatus.OK);
-        }
-        throw new UserAlreadyExistsException();
-    }
 
     @DeleteMapping(path = "/{name}")
-    public ResponseEntity<?> deleteUser(@PathVariable(value="name") String name) {
+    public ResponseEntity<Boolean> deleteUser(@PathVariable(value="name") String name) {
         if(name != null) {
-            userRepository.delete(userRepository.findUserByName(name));
+            boolean success = userRepository.deleteByName(name);
             
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(success, HttpStatus.OK);
         }
         
         throw new NoCurrentPrincipalException();
@@ -85,7 +82,6 @@ public class UserController {
     @DeleteMapping
     public ResponseEntity<Boolean> deleteUser(Principal principal) {
         if(principal != null) {
-
             boolean success = userRepository.deleteByName(principal.getName());
             
             return new ResponseEntity<>(success, HttpStatus.OK);
@@ -94,15 +90,4 @@ public class UserController {
         throw new NoCurrentPrincipalException();
     }
     
-    @DeleteMapping(path = "/{name}")
-    public ResponseEntity<Boolean> deleteSpecificUser(@PathVariable(value="name") String name) {
-        if(name != null) {
-
-            boolean success = userRepository.deleteByName(name);
-            
-            return new ResponseEntity<>(success, HttpStatus.OK);
-        }
-        
-        throw new NoCurrentPrincipalException();
-    }
 }
