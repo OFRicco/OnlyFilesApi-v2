@@ -1,7 +1,9 @@
 package de.onlyfiles.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import de.onlyfiles.Permission;
 import jakarta.persistence.CascadeType;
@@ -13,16 +15,20 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+@JsonIgnoreProperties(value = {"password","ownedGroups","ownedFiles","groups"})
 @Entity
 @Table(name="users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", columnDefinition = "UNSIGNED BIGINT", nullable = false, unique = true, updatable = false)
+    @Column(name = "id", columnDefinition = "BIGINT UNSIGNED", nullable = false, unique = true, updatable = false)
     private long id;
 
     @Column(name = "name", columnDefinition = "VARCHAR(32)", nullable = false, unique = true, updatable = true)
@@ -30,12 +36,19 @@ public class User {
 
     @Column(name = "password", columnDefinition = "VARCHAR(60)", nullable = false, unique = false, updatable = true)
     private String password;
-    
+
     @OneToMany(targetEntity = Group.class, mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Group> ownedGroups;
+    private Set<Group> ownedGroups = new HashSet<>();
 
     @OneToMany(targetEntity = File.class, mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<File> ownedFiles = new ArrayList<>();
+    private Set<File> ownedFiles = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "group_users",
+            joinColumns = @JoinColumn(name="group_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name="user_id", referencedColumnName = "id"))
+    private Set<Group> groups = new HashSet<>();
     
     @Column(name = "permission", nullable = false, unique = false, updatable = true)
     @Enumerated(EnumType.STRING)
@@ -70,19 +83,19 @@ public class User {
         this.password = password;
     }
     
-    public List<Group> getOwnedGroups() {
+    public Set<Group> getOwnedGroups() {
         return ownedGroups;
     }
 
-    public void setOwnedGroups(List<Group> ownedGroups) {
+    public void setOwnedGroups(Set<Group> ownedGroups) {
         this.ownedGroups = ownedGroups;
     }
 
-    public List<File> getOwnedFiles() {
+    public Set<File> getOwnedFiles() {
         return ownedFiles;
     }
 
-    public void setOwnedFiles(List<File> ownedFiles) {
+    public void setOwnedFiles(Set<File> ownedFiles) {
         this.ownedFiles = ownedFiles;
     }
 
@@ -97,5 +110,14 @@ public class User {
     public void addOwnedFile(File newFile) {
         this.ownedFiles.add(newFile);
     }
-
+    
+    public Set<Group> getGroups() {
+        return groups;
+    }
+    
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
+    }
+    
+    
 }

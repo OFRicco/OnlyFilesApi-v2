@@ -15,26 +15,29 @@ public class File {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", columnDefinition = "UNSIGNED BIGINT", nullable = false, unique = true, updatable = false)
+    @Column(name = "id", columnDefinition = "BIGINT UNSIGNED", nullable = false, unique = true, updatable = false)
     private long id;
 
-    @Column(name = "name", columnDefinition = "VARCHAR(256)", nullable = false, unique = true, updatable = false)
+    @Column(name = "name", columnDefinition = "VARCHAR(256)", nullable = false, unique = false, updatable = false)
     private String name;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     private User owner;
  
     @Column(name = "link", columnDefinition = "VARCHAR(128)", nullable = false, unique = true, updatable = false)
     private String link;
 
-    @Column(name = "size", columnDefinition = "UNSIGNED BIGINT", nullable = false, unique = true, updatable = false)
+    @Column(name = "size", columnDefinition = "BIGINT UNSIGNED", nullable = false, unique = false, updatable = false)
     private Long size;
     
     public File() {
     }
     
-    public File(User owner) {
+    public File(String name, User owner, String link, Long size) {
+        this.name = name;
         this.owner = owner;
+        this.link = link;
+        this.size = size;
     }
 
     public long getId() {
@@ -65,6 +68,13 @@ public class File {
         this.link = link;
     }
     
-
+    public Long getSize() {
+        return size;
+    }
+    
+    public void setSize(Long size) {
+        this.size = size;
+    }
+    
     
 }
