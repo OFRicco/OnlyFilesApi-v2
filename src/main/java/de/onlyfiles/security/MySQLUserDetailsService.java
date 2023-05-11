@@ -17,7 +17,7 @@ public class MySQLUserDetailsService implements UserDetailsService {
     
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        de.onlyfiles.model.User user = userRepository.findUserByName(username);
+        de.onlyfiles.model.User user = userRepository.findByName(username);
         if(user == null) {
             throw new UsernameNotFoundException("User not present");
         }
