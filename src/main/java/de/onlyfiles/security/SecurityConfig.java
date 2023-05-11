@@ -2,6 +2,7 @@ package de.onlyfiles.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,7 +24,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeHttpRequests()
-            .anyRequest().authenticated()
+            .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
+            .anyRequest().permitAll()
             .and()
             .formLogin().permitAll().defaultSuccessUrl("/", false)
             .and()
