@@ -8,4 +8,7 @@ public interface FileRepository extends CrudRepository<File, Long> {
     public File findByName(String name);
     public boolean existsByName(String name);
     public boolean deleteByName(String name);
+
+    public File findFileById(Long id);
+    public boolean deleteFileById(Long id);
 }

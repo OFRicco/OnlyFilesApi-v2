@@ -8,4 +8,7 @@ public interface GroupRepository extends CrudRepository<Group, Long> {
     public Group findByName(String name);
     public boolean existsByName(String name);
     public boolean deleteByName(String name);
+
+    public Group findGroupById(Long id);
+    public boolean deleteGroupById(Long id);
 }

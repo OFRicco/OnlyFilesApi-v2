@@ -55,7 +55,7 @@ public class UserController {
         
         User user = null;
         if(id.isPresent()) {
-            user = userRepository.findById(id.get()).get();
+            user = userRepository.findUserById(id.get());
         } else {
             user = userRepository.findByName(principal.getName());
         }
@@ -68,7 +68,7 @@ public class UserController {
     }
 
     @DeleteMapping(path = {"", "/{id}"})
-    public ResponseEntity<Boolean> deleteUser(Principal principal, @PathVariable(value="id", required = false) Optional<Long> id) {
+    public ResponseEntity<?> deleteUser(Principal principal, @PathVariable(value="id", required = false) Optional<Long> id) {
         if(principal == null) {
             throw new NoCurrentPrincipalException();
         }
@@ -84,7 +84,7 @@ public class UserController {
             throw new DeleteFailedException();
         }
         
-        return new ResponseEntity<>(success, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(path = {"/groups", "/groups/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -95,7 +95,7 @@ public class UserController {
 
         User user = null;
         if(id.isPresent()) {
-            user = userRepository.findById(id.get()).get();
+            user = userRepository.findUserById(id.get());
         } else {
             user = userRepository.findByName(principal.getName());
         }
@@ -117,7 +117,7 @@ public class UserController {
 
         User user = null;
         if(id.isPresent()) {
-            user = userRepository.findById(id.get()).get();
+            user = userRepository.findUserById(id.get());
         } else {
             user = userRepository.findByName(principal.getName());
         }
@@ -139,7 +139,7 @@ public class UserController {
 
         User user = null;
         if(id.isPresent()) {
-            user = userRepository.findById(id.get()).get();
+            user = userRepository.findUserById(id.get());
         } else {
             user = userRepository.findByName(principal.getName());
         }
