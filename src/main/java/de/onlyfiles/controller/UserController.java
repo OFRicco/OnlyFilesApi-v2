@@ -46,7 +46,7 @@ public class UserController {
     }
     
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> getUser(Principal principal, @RequestParam(name = "extended") boolean extended) {
+    public ResponseEntity<User> getUser(Principal principal) {
         if(principal == null) {
             throw new NoCurrentPrincipalException();
         }
@@ -56,7 +56,6 @@ public class UserController {
         if(user == null) {
             throw new UserNotFoundException();
         }
-        user.setPassword(null);
         
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
