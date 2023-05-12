@@ -20,13 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.onlyfiles.exception.DeleteFailedException;
 import de.onlyfiles.exception.NoCurrentPrincipalException;
-import de.onlyfiles.exception.ObjectAlreadyExistsException;
 import de.onlyfiles.exception.UserNotFoundException;
 import de.onlyfiles.model.File;
 import de.onlyfiles.model.Group;
 import de.onlyfiles.model.User;
 import de.onlyfiles.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "User")
 @RestController
 @RequestMapping("api/user")
 public class UserController {
@@ -37,19 +40,19 @@ public class UserController {
     @Autowired 
     PasswordEncoder passwordEncoder;
 
+    @Operation(summary = "Create or update user",
+            description = "Can create or update a user. Id in user object is only necessary if you want to update a user.")
     @PostMapping
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
-        if(userRepository.existsByName(user.getName())) {
-            throw new ObjectAlreadyExistsException();
-        }
-        
+    public ResponseEntity<User> createOrUpdateUser(@RequestBody User user) {
         User newUser = userRepository.save(user);
         
         return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
-    
+
+    @Operation(summary = "Get user informations")
     @GetMapping(path = {"", "/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> getUser(Principal principal, @PathVariable(value="id", required = false) Optional<Long> id) {
+    public ResponseEntity<User> getUser(Principal principal,
+            @PathVariable(value="id", required = false) @Parameter(name = "id", description = "The user id") Optional<Long> id) {
         
         User user = null;
         if(id.isPresent()) {
@@ -69,8 +72,10 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @Operation(summary = "Delete user")
     @DeleteMapping(path = {"", "/{id}"})
-    public ResponseEntity<?> deleteUser(Principal principal, @PathVariable(value="id", required = false) Optional<Long> id) {
+    public ResponseEntity<?> deleteUser(Principal principal,
+            @PathVariable(value="id", required = false) @Parameter(name = "id", description = "The user id") Optional<Long> id) {
         boolean success = false;
         
         if(id.isPresent()) {
@@ -89,8 +94,10 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "Get groups with files from user")
     @GetMapping(path = {"/groups", "/groups/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Set<Group>> getGroups(Principal principal, @PathVariable(value="id", required = false) Optional<Long> id) {
+    public ResponseEntity<Set<Group>> getGroups(Principal principal,
+            @PathVariable(value="id", required = false) @Parameter(name = "id", description = "The user id") Optional<Long> id) {
         
         User user = null;
         if(id.isPresent()) {
@@ -110,9 +117,11 @@ public class UserController {
         
         return new ResponseEntity<>(groups, HttpStatus.OK);
     }
-    
+
+    @Operation(summary = "Get owned groups with files")
     @GetMapping(path = {"/owned/groups/","/owned/groups/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Set<Group>> getOwnedGroups(Principal principal, @PathVariable(value="name", required = false) Optional<Long> id) {
+    public ResponseEntity<Set<Group>> getOwnedGroups(Principal principal,
+            @PathVariable(value="name", required = false) @Parameter(name = "id", description = "The user id") Optional<Long> id) {
         User user = null;
         
         if(id.isPresent()) {
@@ -132,9 +141,11 @@ public class UserController {
         
         return new ResponseEntity<>(groups, HttpStatus.OK);
     }
-    
+
+    @Operation(summary = "Get owned files")
     @GetMapping(path = {"/owned/files", "/owned/files/{id}"} , produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Set<File>> getOwnedFiles(Principal principal, @PathVariable(value="name", required = false) Optional<Long> id) {
+    public ResponseEntity<Set<File>> getOwnedFiles(Principal principal,
+            @PathVariable(value="name", required = false) @Parameter(name = "id", description = "The user id") Optional<Long> id) {
         User user = null;
         
         if(id.isPresent()) {
@@ -156,8 +167,10 @@ public class UserController {
         return new ResponseEntity<>(files, HttpStatus.OK);
     }
 
+    @Operation(summary = "Get files where the user has access")
     @GetMapping(path = {"/files","/files/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Set<File>> getFiles(Principal principal, @PathVariable(value="id", required = false) Optional<Long> id) {
+    public ResponseEntity<Set<File>> getFiles(Principal principal,
+            @PathVariable(value="id", required = false) @Parameter(name = "id", description = "The user id") Optional<Long> id) {
         User user = null;
         
         if(id.isPresent()) {

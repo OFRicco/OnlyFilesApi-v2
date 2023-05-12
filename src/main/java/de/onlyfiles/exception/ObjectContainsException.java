@@ -1,7 +1,7 @@
 package de.onlyfiles.exception;
 
 
-public class ObjectAlreadyExistsException extends RuntimeException {
+public class ObjectContainsException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 

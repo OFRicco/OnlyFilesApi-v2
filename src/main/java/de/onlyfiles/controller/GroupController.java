@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import de.onlyfiles.exception.DeleteFailedException;
 import de.onlyfiles.exception.FileNotFoundException;
 import de.onlyfiles.exception.GroupNotFoundException;
-import de.onlyfiles.exception.ObjectAlreadyExistsException;
+import de.onlyfiles.exception.ObjectContainsException;
 import de.onlyfiles.exception.UserNotFoundException;
 import de.onlyfiles.model.File;
 import de.onlyfiles.model.Group;
@@ -23,7 +23,11 @@ import de.onlyfiles.model.User;
 import de.onlyfiles.repository.FileRepository;
 import de.onlyfiles.repository.GroupRepository;
 import de.onlyfiles.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "Group")
 @RestController
 @RequestMapping("api/group")
 public class GroupController {
@@ -37,19 +41,19 @@ public class GroupController {
     @Autowired
     public UserRepository userRepository;
 
+    @Operation(summary = "Create or update group",
+            description = "Can create or update a group. Id in group object is only necessary if you want to update a group.")
     @PostMapping
-    public ResponseEntity<Group> createGroup(@RequestBody Group group) {
-        if(groupRepository.existsByName(group.getName())) {
-            throw new ObjectAlreadyExistsException();
-        }
+    public ResponseEntity<Group> createOrUpdateGroup(@RequestBody Group group) {
         
         Group createdGrouped = groupRepository.save(group);
         
         return new ResponseEntity<>(createdGrouped, HttpStatus.OK);
     }
 
+    @Operation(summary = "Get group informations")
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Group> getGroup(@PathVariable(value="id", required = true) Long id) {
+    public ResponseEntity<Group> getGroup(@PathVariable(value="id", required = true) @Parameter(name = "id", description = "The group id") Long id) {
         Group group = groupRepository.findGroupById(id);
         
         if(group == null) {
@@ -59,8 +63,9 @@ public class GroupController {
         return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
+    @Operation(summary = "Delete group")
     @DeleteMapping
-    public ResponseEntity<?> deleteGroup(@PathVariable(value="id", required = true) Long id) {
+    public ResponseEntity<?> deleteGroup(@PathVariable(value="id", required = true) @Parameter(name = "id", description = "The group id") Long id) {
         
         boolean success = groupRepository.deleteGroupById(id);
 
@@ -71,8 +76,10 @@ public class GroupController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "Add user to group")
     @PostMapping(path = "/{group_id}/{user_id}")
-    public ResponseEntity<?> addMember(@PathVariable(value="group_id", required = true) Long groupId, @PathVariable(value="user_id", required = true) Long userId) {
+    public ResponseEntity<?> addMember(@PathVariable(value="group_id", required = true)  @Parameter(name = "group_id", description = "The group id") Long groupId,
+            @PathVariable(value="user_id", required = true) @Parameter(name = "user_id", description = "The user id") Long userId) {
         
         Group group = groupRepository.findGroupById(groupId);
         
@@ -87,7 +94,7 @@ public class GroupController {
         }
         
         if(group.getMembers().contains(user)) {
-            throw new ObjectAlreadyExistsException();
+            throw new ObjectContainsException();
         }
         
         group.addMember(user);
@@ -96,8 +103,10 @@ public class GroupController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "Delete user from group")
     @DeleteMapping(path = "/{group_id}/{user_id}")
-    public ResponseEntity<?> removeMember(@PathVariable(value="group_id", required = true) Long groupId, @PathVariable(value="user_id", required = true) Long userId) {
+    public ResponseEntity<?> removeMember(@PathVariable(value="group_id", required = true)  @Parameter(name = "group_id", description = "The group id") Long groupId,
+            @PathVariable(value="user_id", required = true) @Parameter(name = "user_id", description = "The user id") Long userId) {
         
         Group group = groupRepository.findGroupById(groupId);
         
@@ -122,8 +131,10 @@ public class GroupController {
     }
     
 
+    @Operation(summary = "Add file to group")
     @PostMapping(path = "/{group_id}/{file_id}")
-    public ResponseEntity<?> addFile(@PathVariable(value="group_id", required = true) Long groupId, @PathVariable(value="file_id", required = true) Long fileId) {
+    public ResponseEntity<?> addFile(@PathVariable(value="group_id", required = true) @Parameter(name = "group_id", description = "The group id") Long groupId,
+            @PathVariable(value="file_id", required = true) @Parameter(name = "file_id", description = "The file id") Long fileId) {
 
         Group group = groupRepository.findGroupById(groupId);
         
@@ -138,7 +149,7 @@ public class GroupController {
         }
         
         if(group.getFiles().contains(file)) {
-            throw new ObjectAlreadyExistsException();
+            throw new ObjectContainsException();
         }
         
         group.addFile(file);
@@ -147,8 +158,10 @@ public class GroupController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "Delete file from group")
     @DeleteMapping(path = "/{group_id}/{file_id}")
-    public ResponseEntity<?> removeFile(@PathVariable(value="group_id", required = true) Long groupId, @PathVariable(value="file_id", required = true) Long fileId) {
+    public ResponseEntity<?> removeFile(@PathVariable(value="group_id", required = true)  @Parameter(name = "group_id", description = "The group id") Long groupId,
+            @PathVariable(value="file_id", required = true) @Parameter(name = "file_id", description = "The groupId id") Long fileId) {
 
         Group group = groupRepository.findGroupById(groupId);
         
