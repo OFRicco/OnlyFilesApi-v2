@@ -39,7 +39,6 @@ public class File {
     @Column(name = "size", columnDefinition = "BIGINT UNSIGNED", nullable = false, unique = false, updatable = false)
     private Long size;
     
-
     @ManyToMany
     @JoinTable(
             name = "group_files",

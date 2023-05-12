@@ -1,6 +1,7 @@
 package de.onlyfiles.controller;
 
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -37,26 +38,27 @@ public class UserController {
     PasswordEncoder passwordEncoder;
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
         if(userRepository.existsByName(user.getName())) {
             throw new ObjectAlreadyExistsException();
         }
         
-        User createdUser = userRepository.save(user);
+        User newUser = userRepository.save(user);
         
-        return new ResponseEntity<>(createdUser, HttpStatus.OK);
+        return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
     
     @GetMapping(path = {"", "/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getUser(Principal principal, @PathVariable(value="id", required = false) Optional<Long> id) {
-        if(principal == null) {
-            throw new NoCurrentPrincipalException();
-        }
         
         User user = null;
         if(id.isPresent()) {
             user = userRepository.findUserById(id.get());
         } else {
+            if(principal == null) {
+                throw new NoCurrentPrincipalException();
+            }
+            
             user = userRepository.findByName(principal.getName());
         }
         
@@ -69,14 +71,14 @@ public class UserController {
 
     @DeleteMapping(path = {"", "/{id}"})
     public ResponseEntity<?> deleteUser(Principal principal, @PathVariable(value="id", required = false) Optional<Long> id) {
-        if(principal == null) {
-            throw new NoCurrentPrincipalException();
-        }
-
         boolean success = false;
+        
         if(id.isPresent()) {
             success = userRepository.deleteUserById(id.get());
         } else {
+            if(principal == null) {
+                throw new NoCurrentPrincipalException();
+            }
             success = userRepository.deleteByName(principal.getName());
         }
         
@@ -89,14 +91,14 @@ public class UserController {
 
     @GetMapping(path = {"/groups", "/groups/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<Group>> getGroups(Principal principal, @PathVariable(value="id", required = false) Optional<Long> id) {
-        if(principal == null) {
-            throw new NoCurrentPrincipalException();
-        }
-
+        
         User user = null;
         if(id.isPresent()) {
             user = userRepository.findUserById(id.get());
         } else {
+            if(principal == null) {
+                throw new NoCurrentPrincipalException();
+            }
             user = userRepository.findByName(principal.getName());
         }
             
@@ -111,14 +113,14 @@ public class UserController {
     
     @GetMapping(path = {"/owned/groups/","/owned/groups/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<Group>> getOwnedGroups(Principal principal, @PathVariable(value="name", required = false) Optional<Long> id) {
-        if(principal == null) {
-            throw new NoCurrentPrincipalException();
-        }
-
         User user = null;
+        
         if(id.isPresent()) {
             user = userRepository.findUserById(id.get());
         } else {
+            if(principal == null) {
+                throw new NoCurrentPrincipalException();
+            }
             user = userRepository.findByName(principal.getName());
         }
             
@@ -133,14 +135,15 @@ public class UserController {
     
     @GetMapping(path = {"/owned/files", "/owned/files/{id}"} , produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<File>> getOwnedFiles(Principal principal, @PathVariable(value="name", required = false) Optional<Long> id) {
-        if(principal == null) {
-            throw new NoCurrentPrincipalException();
-        }
-
         User user = null;
+        
         if(id.isPresent()) {
             user = userRepository.findUserById(id.get());
         } else {
+            if(principal == null) {
+                throw new NoCurrentPrincipalException();
+            }
+            
             user = userRepository.findByName(principal.getName());
         }
             
@@ -153,15 +156,32 @@ public class UserController {
         return new ResponseEntity<>(files, HttpStatus.OK);
     }
 
-    @PostMapping(path = "/edit")
-    public ResponseEntity<Long> editUser(@RequestBody User user) {
-        if(!userRepository.existsByName(user.getName())) {
+    @GetMapping(path = {"/files","/files/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Set<File>> getFiles(Principal principal, @PathVariable(value="id", required = false) Optional<Long> id) {
+        User user = null;
+        
+        if(id.isPresent()) {
+            user = userRepository.findUserById(id.get());
+        } else {
+            if(principal == null) {
+                throw new NoCurrentPrincipalException();
+            }
+            
+            user = userRepository.findByName(principal.getName());
+        }
+        
+        if(user == null) {
             throw new UserNotFoundException();
         }
         
-        User createdUser = userRepository.save(user);
+        Set<File> files = new HashSet<>();
         
-        return new ResponseEntity<>(createdUser.getId(), HttpStatus.OK);
+        for(Group group : user.getGroups()) {
+            for(File file : group.getFiles()) {
+                files.add(file);
+            }
+        }
+        
+        return new ResponseEntity<>(files, HttpStatus.OK);
     }
-    
 }
