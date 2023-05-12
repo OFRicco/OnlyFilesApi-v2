@@ -62,7 +62,7 @@ public class FileController {
     }
 
     @GetMapping(path = "/groups/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Set<Group>> getRelatedGroups(@PathVariable(value="id", required = true) Long id) {
+    public ResponseEntity<Set<Group>> getRelatedGroups(@PathVariable(value="id", required = true) Long id) { // add a dynamic json filter for only showing groups
         File file = fileRepository.findFileById(id);
         
         if(file == null) {
