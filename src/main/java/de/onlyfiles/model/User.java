@@ -21,7 +21,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-@JsonIgnoreProperties(value = {"password","ownedGroups","ownedFiles","groups"})
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer","password","ownedGroups","ownedFiles","groups"})
 @Entity
 @Table(name="users")
 public class User {

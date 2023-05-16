@@ -50,13 +50,13 @@ public class UserController {
     }
 
     @Operation(summary = "Get user informations")
-    @GetMapping(path = {"", "/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = {"", "/{name}"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getUser(Principal principal,
-            @PathVariable(value="id", required = false) @Parameter(name = "id", description = "The user id") Optional<Long> id) {
+            @PathVariable(value="name", required = false) @Parameter(name = "name", description = "The user name") Optional<String> name) {
         
         User user = null;
-        if(id.isPresent()) {
-            user = userRepository.findUserById(id.get());
+        if(name.isPresent()) {
+            user = userRepository.findByName(name.get());
         } else {
             if(principal == null) {
                 throw new NoCurrentPrincipalException();
@@ -73,13 +73,13 @@ public class UserController {
     }
 
     @Operation(summary = "Delete user")
-    @DeleteMapping(path = {"", "/{id}"})
+    @DeleteMapping(path = {"", "/{name}"})
     public ResponseEntity<?> deleteUser(Principal principal,
-            @PathVariable(value="id", required = false) @Parameter(name = "id", description = "The user id") Optional<Long> id) {
+            @PathVariable(value="name", required = false) @Parameter(name = "name", description = "The user name") Optional<String> name) {
         boolean success = false;
         
-        if(id.isPresent()) {
-            success = userRepository.deleteUserById(id.get());
+        if(name.isPresent()) {
+            success = userRepository.deleteByName(name.get());
         } else {
             if(principal == null) {
                 throw new NoCurrentPrincipalException();
@@ -95,13 +95,13 @@ public class UserController {
     }
 
     @Operation(summary = "Get groups with files from user")
-    @GetMapping(path = {"/groups", "/groups/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = {"/groups", "/groups/{name}"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<Group>> getGroups(Principal principal,
-            @PathVariable(value="id", required = false) @Parameter(name = "id", description = "The user id") Optional<Long> id) {
+            @PathVariable(value="name", required = false) @Parameter(name = "name", description = "The user name") Optional<String> name) {
         
         User user = null;
-        if(id.isPresent()) {
-            user = userRepository.findUserById(id.get());
+        if(name.isPresent()) {
+            user = userRepository.findByName(name.get());
         } else {
             if(principal == null) {
                 throw new NoCurrentPrincipalException();
@@ -119,13 +119,13 @@ public class UserController {
     }
 
     @Operation(summary = "Get owned groups with files")
-    @GetMapping(path = {"/owned/groups/","/owned/groups/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = {"/owned/groups/","/owned/groups/{name}"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<Group>> getOwnedGroups(Principal principal,
-            @PathVariable(value="name", required = false) @Parameter(name = "id", description = "The user id") Optional<Long> id) {
+            @PathVariable(value="name", required = false) @Parameter(name = "name", description = "The user name") Optional<String> name) {
         User user = null;
         
-        if(id.isPresent()) {
-            user = userRepository.findUserById(id.get());
+        if(name.isPresent()) {
+            user = userRepository.findByName(name.get());
         } else {
             if(principal == null) {
                 throw new NoCurrentPrincipalException();
@@ -143,18 +143,17 @@ public class UserController {
     }
 
     @Operation(summary = "Get owned files")
-    @GetMapping(path = {"/owned/files", "/owned/files/{id}"} , produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = {"/owned/files", "/owned/files/{name}"} , produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<File>> getOwnedFiles(Principal principal,
-            @PathVariable(value="name", required = false) @Parameter(name = "id", description = "The user id") Optional<Long> id) {
+            @PathVariable(value="name", required = false) @Parameter(name = "name", description = "The user name") Optional<String> name) {
         User user = null;
-        
-        if(id.isPresent()) {
-            user = userRepository.findUserById(id.get());
+
+        if(name.isPresent()) {
+            user = userRepository.findByName(name.get());
         } else {
             if(principal == null) {
                 throw new NoCurrentPrincipalException();
             }
-            
             user = userRepository.findByName(principal.getName());
         }
             
@@ -168,13 +167,13 @@ public class UserController {
     }
 
     @Operation(summary = "Get files where the user has access")
-    @GetMapping(path = {"/files","/files/{id}"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = {"/files","/files/{name}"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<File>> getFiles(Principal principal,
-            @PathVariable(value="id", required = false) @Parameter(name = "id", description = "The user id") Optional<Long> id) {
+            @PathVariable(value="name", required = false) @Parameter(name = "name", description = "The user name") Optional<String> name) {
         User user = null;
         
-        if(id.isPresent()) {
-            user = userRepository.findUserById(id.get());
+        if(name.isPresent()) {
+            user = userRepository.findByName(name.get());
         } else {
             if(principal == null) {
                 throw new NoCurrentPrincipalException();
@@ -197,4 +196,5 @@ public class UserController {
         
         return new ResponseEntity<>(files, HttpStatus.OK);
     }
+
 }

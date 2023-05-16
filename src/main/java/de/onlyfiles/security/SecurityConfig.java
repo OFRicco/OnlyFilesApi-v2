@@ -29,7 +29,7 @@ public class SecurityConfig {
             .and()
             .formLogin().permitAll().defaultSuccessUrl("/", false)
             .and()
-            .logout().permitAll();
+            .logout().logoutUrl("/api/auth/logout").permitAll();
         
         http.sessionManagement().maximumSessions(1).and().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
         

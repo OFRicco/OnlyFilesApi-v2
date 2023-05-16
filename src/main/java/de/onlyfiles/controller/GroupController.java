@@ -1,5 +1,7 @@
 package de.onlyfiles.controller;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -77,9 +79,9 @@ public class GroupController {
     }
 
     @Operation(summary = "Add user to group")
-    @PostMapping(path = "/{group_id}/{user_id}")
+    @PostMapping(path = "/{group_id}/{user_name}")
     public ResponseEntity<?> addMember(@PathVariable(value="group_id", required = true)  @Parameter(name = "group_id", description = "The group id") Long groupId,
-            @PathVariable(value="user_id", required = true) @Parameter(name = "user_id", description = "The user id") Long userId) {
+            @PathVariable(value="user_name", required = true) @Parameter(name = "user_name", description = "The user name") String userName) {
         
         Group group = groupRepository.findGroupById(groupId);
         
@@ -87,7 +89,7 @@ public class GroupController {
             throw new GroupNotFoundException();
         }
         
-        User user = userRepository.findUserById(userId);
+        User user = userRepository.findByName(userName);
 
         if(user == null) {
             throw new UserNotFoundException();
@@ -104,9 +106,9 @@ public class GroupController {
     }
 
     @Operation(summary = "Delete user from group")
-    @DeleteMapping(path = "/{group_id}/{user_id}")
+    @DeleteMapping(path = "/{group_id}/{user_name}")
     public ResponseEntity<?> removeMember(@PathVariable(value="group_id", required = true)  @Parameter(name = "group_id", description = "The group id") Long groupId,
-            @PathVariable(value="user_id", required = true) @Parameter(name = "user_id", description = "The user id") Long userId) {
+            @PathVariable(value="user_name", required = true) @Parameter(name = "user_name", description = "The user name") String userName) {
         
         Group group = groupRepository.findGroupById(groupId);
         
@@ -114,7 +116,7 @@ public class GroupController {
             throw new GroupNotFoundException();
         }
         
-        User user = userRepository.findUserById(userId);
+        User user = userRepository.findByName(userName);
 
         if(user == null) {
             throw new UserNotFoundException();
@@ -183,6 +185,36 @@ public class GroupController {
         groupRepository.save(group);
         
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get files of group")
+    @GetMapping(path = "/files/{id}")
+    public ResponseEntity<Set<File>> getFiles(@PathVariable(value="id", required = true)  @Parameter(name = "id", description = "The group id") Long groupId) {
+
+        Group group = groupRepository.findGroupById(groupId);
+        
+        if(group == null) {
+            throw new GroupNotFoundException();
+        }
+        
+        Set<File> files = group.getFiles();
+        
+        return new ResponseEntity<>(files, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get members of group")
+    @GetMapping(path = "/members/{id}")
+    public ResponseEntity<Set<User>> getMembers(@PathVariable(value="id", required = true)  @Parameter(name = "id", description = "The group id") Long groupId) {
+
+        Group group = groupRepository.findGroupById(groupId);
+        
+        if(group == null) {
+            throw new GroupNotFoundException();
+        }
+        
+        Set<User> members = group.getMembers();
+        
+        return new ResponseEntity<>(members, HttpStatus.OK);
     }
     
 }

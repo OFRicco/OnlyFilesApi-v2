@@ -3,6 +3,7 @@ package de.onlyfiles.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
@@ -27,7 +28,7 @@ public class Group {
     @Column(name = "id", columnDefinition = "BIGINT UNSIGNED", nullable = false, unique = true, updatable = false)
     private long id;
 
-    @Column(name = "name", columnDefinition = "VARCHAR(32)", nullable = false, unique = true, updatable = true)
+    @Column(name = "name", columnDefinition = "VARCHAR(32)", nullable = false, unique = false, updatable = true)
     private String name;
     
     @ManyToOne(fetch = FetchType.LAZY)

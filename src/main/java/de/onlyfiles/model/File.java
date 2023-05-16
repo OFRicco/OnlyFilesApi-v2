@@ -36,6 +36,9 @@ public class File {
     @Column(name = "link", columnDefinition = "VARCHAR(128)", nullable = false, unique = true, updatable = false)
     private String link;
 
+    @Column(name = "upload_date", columnDefinition = "BIGINT UNSIGNED", nullable = false, unique = false, updatable = false)
+    private Long uploadDate;
+
     @Column(name = "size", columnDefinition = "BIGINT UNSIGNED", nullable = false, unique = false, updatable = false)
     private Long size;
     
@@ -49,10 +52,11 @@ public class File {
     public File() {
     }
     
-    public File(String name, User owner, String link, Long size) {
+    public File(String name, User owner, String link, Long uploadDate, Long size) {
         this.name = name;
         this.owner = owner;
         this.link = link;
+        this.uploadDate = uploadDate;
         this.size = size;
     }
 
@@ -83,7 +87,15 @@ public class File {
     public void setLink(String link) {
         this.link = link;
     }
+
+    public Long getUploadDate() {
+        return uploadDate;
+    }
     
+    public void setUploadDate(Long uploadDate) {
+        this.uploadDate = uploadDate;
+    }
+
     public Long getSize() {
         return size;
     }

@@ -67,7 +67,6 @@ public class FileController {
     @Operation(summary = "Get a list of related groups", description = "Get a list from all groups, where the file is connected.")
     @GetMapping(path = "/groups/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<Group>> getRelatedGroups(@PathVariable(value="id", required = true) @Parameter(name = "id", description = "The file id") Long id) {
-        // add a dynamic json filter for only showing groups
         File file = fileRepository.findFileById(id);
         
         if(file == null) {
@@ -75,6 +74,10 @@ public class FileController {
         }
         
         Set<Group> groups = file.getGroups();
+        
+        for(Group group : groups) {
+            System.out.println(group.getOwner().getName());
+        }
         
         return new ResponseEntity<>(groups, HttpStatus.OK);
     }
