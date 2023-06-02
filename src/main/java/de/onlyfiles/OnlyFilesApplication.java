@@ -9,5 +9,5 @@ public class OnlyFilesApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(OnlyFilesApplication.class, args);
 	}
-
+    
 }

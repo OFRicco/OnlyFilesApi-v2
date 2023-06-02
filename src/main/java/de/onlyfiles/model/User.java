@@ -21,7 +21,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer","password","ownedGroups","ownedFiles","groups"})
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer","ownedGroups","ownedFiles","groups"})
 @Entity
 @Table(name="users")
 public class User {
@@ -61,6 +61,10 @@ public class User {
         this.name = name;
         this.password = password;
         this.permission = permission;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
     
     public long getId() {
