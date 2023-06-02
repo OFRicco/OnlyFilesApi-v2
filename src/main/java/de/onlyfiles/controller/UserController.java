@@ -69,9 +69,6 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
     
     @Autowired
-    private SessionManager sessionManager;
-    
-    @Autowired
     private SessionRegistry sessionRegistry;
     
     @Autowired
