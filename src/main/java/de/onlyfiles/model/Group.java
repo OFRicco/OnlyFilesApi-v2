@@ -19,7 +19,7 @@ import jakarta.persistence.Table;
 
 @JsonIgnoreProperties(value = {"members"})
 @Entity
-@Table(name = "groups")
+@Table(name = "groups_")
 public class Group {
 
     @Id
